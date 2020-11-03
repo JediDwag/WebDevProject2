@@ -3,23 +3,23 @@
     "version": "0.0.0",
     "description": "Dynamic Web Server using Node JS",
     "author": {
-        "name": "",
-        "email": ""
+        "name": "Nathan Hickey",
+        "email": "hick3254@stthomas.edu"
     },
     "contributors": [
         {
-            "name": "",
-            "email": ""
+            "name": "James Klaesges",
+            "email": "klae4118@stthomas.edu"
         },
         {
-            "name": "",
-            "email": ""
+            "name": "Stephen Hedman",
+            "email": "hedm5673@stthomas.edu"
         }
     ],
     "main": "server.js",
     "repository": {
         "type": "git",
-        "url": ""
+        "url": "https://github.com/JediDwag/WebDevProject2"
     },
     "dependencies": {
         "express": "^4.17.1",
