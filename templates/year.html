@@ -6,7 +6,7 @@
     <title>US Energy Consumption</title>
     <link rel="stylesheet" href="css/style.css">
     <script type="application/javascript">
-        // `year` and total counts for entire US => set these variables equal to appropriate value
+        // total counts for entire US => set these variables equal to appropriate value
         //   * these variables will be defined and accessible from any script loaded after this one
         var year;
         var coal_count;
@@ -17,9 +17,33 @@
     </script>
 </head>
 <body>
-    <!-- create template here -->
-    <h1>YEAR</h1>
+    <!-- Year Header -->
+    <h1>YEAR_HEADER</h1>
 
+    <!-- Pie Chart -->
+    <canvas id="pie-chart" width="800" height="450"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script type="application/javascript">
+        new Chart(document.getElementById("pie-chart"), {
+            type: 'pie',
+            data: {
+            labels: ["Coal", "Natural Gas", "Nuclear", "Petroleum", "Renewable"],
+            datasets: [{
+                label: "billion Btu",
+                backgroundColor: ["#003f5c","#58508d", "#bc5090", "#ff6361", "#ffa600"],
+                data: [coal_count, natural_gas_count, nuclear_count, petroleum_count, renewable_count]
+            }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: 'Total Energy Consumption Counts for the Entire US during ' + year
+                }
+            }
+        });
+    </script>
+
+    <!-- Table -->  
     TABLE
 </body>
 </html>
