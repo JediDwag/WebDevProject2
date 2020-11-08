@@ -3,4 +3,73 @@
 }
 table, th, td {
     border: 1px solid black;
-  }
+}
+
+/* Dropdown navigation menu largely based off of https://www.w3schools.com/css/css_dropdowns.asp */
+.dropbtn {
+    background-color: #8e8268;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    outline: none;
+}
+.searchBtn{
+    background-color: brown;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    float:right;
+    outline: none;
+}
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+.dropdown-content a, .dropdown-left a{
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+.dropdown-left{
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    right: 160px;
+    top: 0px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+.dropbtnInner {
+    background-color: #f1f1f1;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    outline: none;
+}
+.dropdownInner:hover .dropdown-left {
+    display: block;
+}
+.dropdown .dropdownInner:hover .dropbtnInner {
+    background-color: #ddd;
+}
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+.dropdown:hover .dropbtn {
+    background-color: #844D36;
+}
