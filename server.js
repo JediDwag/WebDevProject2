@@ -1,7 +1,6 @@
 // Built-in Node.js modules
 let fs = require('fs');
 let path = require('path');
-let Chart = require('chart.js');
 
 // NPM modules
 let express = require('express');
@@ -34,66 +33,70 @@ app.get('/', (req, res) => {
 
 // GET request handler for '/year/*'
 app.get('/year/:selected_year', (req, res) => {
-    console.log(req.params.selected_year);
-    fs.readFile(path.join(template_dir, 'year.html'), 'utf-8', (err, template) => {
-        // modify `template` and send response
-        // this will require a query to the SQL database
-        
-        //Put in selected year
-        template = template.replace("YEAR_HEADER", req.params.selected_year);   
-        template = template.replace("year", "year = " + req.params.selected_year);
-
-        //Get data from database for the selected year
-        let query = 'SELECT state_abbreviation, coal, natural_gas, nuclear, petroleum, renewable FROM Consumption WHERE year = ?';
-        let params = [req.params.selected_year];
-        db.all(query, params, (err, rows) => {
-            if (err) {
-                console.log("Error", err.message);
-            }
-
-            //Make table headers
-            let table = "<table><tr><th>State</th><th>Coal Consumption</th><th>Gas Consumption</th><th>Nuclear Consumption</th><th>Petroleum Consumption</th><th>Renewable Consumption</th><th>Total Energy Consumption</th></tr>";
-            let coal_count = 0;
-            let natural_gas_count = 0;
-            let nuclear_count = 0;
-            let petroleum_count = 0;
-            let renewable_count = 0;
-            var i = 0;
-            for (i = 0; i < rows.length; i++) {
-                //Insert table rows
-                table = table + "<tr>";
-                table = table + "<td>" + rows[i].state_abbreviation + "</td>";
-                table = table + "<td>" + rows[i].coal + "</td>";
-                table = table + "<td>" + rows[i].natural_gas + "</td>";
-                table = table + "<td>" + rows[i].nuclear + "</td>";
-                table = table + "<td>" + rows[i].petroleum + "</td>";
-                table = table + "<td>" + rows[i].renewable + "</td>";
-                let total = rows[i].coal + rows[i].natural_gas + rows[i].nuclear + rows[i].petroleum + rows[i].renewable;
-                table = table + "<td>" + total + "</td>";
-                table = table + "</tr>"
-
-                //Count up summary statistics
-                coal_count = coal_count + rows[i].coal;
-                natural_gas_count = natural_gas_count + rows[i].natural_gas;
-                nuclear_count = nuclear_count + rows[i].nuclear;
-                petroleum_count = petroleum_count + rows[i].petroleum;
-                renewable_count = renewable_count + rows[i].renewable;
-            }
-            table = table + "</table>";
-            //Insert table into template
-            template = template.replace("TABLE", table);
-
-            //Insert summary statistics into template
-            template = template.replace("coal_count", "coal_count = " + coal_count);
-            template = template.replace("natural_gas_count", "natural_gas_count = " + natural_gas_count);
-            template = template.replace("nuclear_count", "nuclear_count = " + nuclear_count);
-            template = template.replace("petroleum_count", "petroleum_count = " + petroleum_count);
-            template = template.replace("renewable_count", "renewable_count = " + renewable_count);
+    if (req.params.selected_year < 1960 || req.params.selected_year > 2018){
+        res.status(404).send("Error, no data for "+ req.params.selected_year);
+    }
+    else{
+        fs.readFile(path.join(template_dir, 'year.html'), 'utf-8', (err, template) => {
+            // modify `template` and send response
+            // this will require a query to the SQL database
             
-            res.status(200).type('html').send(template); // <-- you may need to change this
-        });
+            //Put in selected year
+            template = template.replace("YEAR_HEADER", req.params.selected_year);   
+            template = template.replace("year", "year = " + req.params.selected_year);
 
-    });
+            //Get data from database for the selected year
+            let query = 'SELECT state_abbreviation, coal, natural_gas, nuclear, petroleum, renewable FROM Consumption WHERE year = ?';
+            let params = [req.params.selected_year];
+            db.all(query, params, (err, rows) => {
+                if (err) {
+                    console.log("Error", err.message);
+                }
+                else{
+                    //Make table headers
+                    let table = "<table><tr><th>State</th><th>Coal Consumption</th><th>Gas Consumption</th><th>Nuclear Consumption</th><th>Petroleum Consumption</th><th>Renewable Consumption</th><th>Total Energy Consumption</th></tr>";
+                    let coal_count = 0;
+                    let natural_gas_count = 0;
+                    let nuclear_count = 0;
+                    let petroleum_count = 0;
+                    let renewable_count = 0;
+                    var i = 0;
+                    for (i = 0; i < rows.length; i++) {
+                        //Insert table rows
+                        table = table + "<tr>";
+                        table = table + "<td>" + rows[i].state_abbreviation + "</td>";
+                        table = table + "<td>" + rows[i].coal + "</td>";
+                        table = table + "<td>" + rows[i].natural_gas + "</td>";
+                        table = table + "<td>" + rows[i].nuclear + "</td>";
+                        table = table + "<td>" + rows[i].petroleum + "</td>";
+                        table = table + "<td>" + rows[i].renewable + "</td>";
+                        let total = rows[i].coal + rows[i].natural_gas + rows[i].nuclear + rows[i].petroleum + rows[i].renewable;
+                        table = table + "<td>" + total + "</td>";
+                        table = table + "</tr>"
+
+                        //Count up summary statistics
+                        coal_count = coal_count + rows[i].coal;
+                        natural_gas_count = natural_gas_count + rows[i].natural_gas;
+                        nuclear_count = nuclear_count + rows[i].nuclear;
+                        petroleum_count = petroleum_count + rows[i].petroleum;
+                        renewable_count = renewable_count + rows[i].renewable;
+                    }
+                    table = table + "</table>";
+                    //Insert table into template
+                    template = template.replace("TABLE", table);
+
+                    //Insert summary statistics into template
+                    template = template.replace("coal_count", "coal_count = " + coal_count);
+                    template = template.replace("natural_gas_count", "natural_gas_count = " + natural_gas_count);
+                    template = template.replace("nuclear_count", "nuclear_count = " + nuclear_count);
+                    template = template.replace("petroleum_count", "petroleum_count = " + petroleum_count);
+                    template = template.replace("renewable_count", "renewable_count = " + renewable_count);
+                    
+                    res.status(200).type('html').send(template); // <-- you may need to change this
+                }
+            });
+        });
+    }
 });
 
 // GET request handler for '/state/*'
