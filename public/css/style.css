@@ -19,7 +19,15 @@ h1{
 #previousBtn:hover, #nextBtn:hover{
     background-color: #8e8268;
 }
-
+/*Base off of https://www.w3schools.com/howto/howto_css_arrows.asp */
+.arrow{
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+}
 /* Dropdown navigation menu largely based off of https://www.w3schools.com/css/css_dropdowns.asp */
 .dropbtn {
     background-color: #8e8268;
