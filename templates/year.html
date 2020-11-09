@@ -20,6 +20,28 @@
     <!-- Year Header -->
     <h1 style="float:left">YEAR_HEADER</h1>
 
+    <!-- Previous and Next Buttons -->
+    <a id="previousBtn" style="margin-left:10px;" href="/year/1980">< Previous</a>
+    <a id="nextBtn" href="/year/1980">Next ></a>
+    <script type="application/javascript">
+        var previousBtn = document.getElementById("previousBtn");
+        var nextBtn = document.getElementById("nextBtn");
+        if (year === 1960){
+            previousBtn.setAttribute("href","/year/2018");
+            nextBtn.setAttribute("href","/year/1961");
+        }
+        else if (year === 2018){
+            previousBtn.setAttribute("href","/year/2017");
+            nextBtn.setAttribute("href","/year/1960");
+        }
+        else {
+            let prev = year - 1;
+            let next = year + 1;
+            previousBtn.setAttribute("href","/year/" + prev);
+            nextBtn.setAttribute("href","/year/" + next);
+        }
+    </script>
+
     <!-- Navigation Menu -->
     <div class="dropdown" style="float:right">
         <button class="dropbtn">Year</button>

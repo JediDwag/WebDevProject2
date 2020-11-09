@@ -4,6 +4,21 @@
 table, th, td {
     border: 1px solid black;
 }
+h1{
+    background-color:  #8e8268;
+    color: white;
+    padding: 12px;
+}
+#previousBtn, #nextBtn{
+    background-color: brown;
+    color: white;
+    text-decoration: none;
+    padding: 16px;
+    float: left;
+}
+#previousBtn:hover, #nextBtn:hover{
+    background-color: #8e8268;
+}
 
 /* Dropdown navigation menu largely based off of https://www.w3schools.com/css/css_dropdowns.asp */
 .dropbtn {
