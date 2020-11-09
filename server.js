@@ -121,6 +121,17 @@ app.get('/energy/:selected_energy_source', (req, res) => {
     });
 });
 
+// This is only a test page. This entire method will be removed eventually.
+app.get('/test', (req, res) => {
+    console.log(req.params.selected_state);
+    fs.readFile(path.join(public_dir, 'test.html'), 'utf8', (err, data) => {
+        // modify `template` and send response
+        // this will require a query to the SQL database
+
+        res.status(200).type('html').send(data); // <-- you may need to change this
+    });
+});
+
 app.listen(port, () => {
     console.log('Now listening on port ' + port);
 });
