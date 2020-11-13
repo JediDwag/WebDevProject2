@@ -32,6 +32,8 @@ app.get('/', (req, res) => {
 
 // GET request handler for '/year/*'
 app.get('/year/:selected_year', (req, res) => {
+    //Strip away all characters that are not a number (protect against SQL injection)
+    req.params.selected_year = req.params.selected_year.replace(/\D/g,'');
     if (req.params.selected_year < 1960 || req.params.selected_year > 2018){
         res.status(404).send("Error, no data for "+ req.params.selected_year);
     }
@@ -94,7 +96,6 @@ app.get('/year/:selected_year', (req, res) => {
                     //Read in navigation bar
                     fs.readFile(path.join(template_dir, 'navigationBar.html'), 'utf-8', (err, navigationBar) => {
                         template = template.replace("Navigation Bar", navigationBar);
-
 
                         res.status(200).type('html').send(template); // <-- you may need to change this
                     });
@@ -237,7 +238,12 @@ app.get('/state/:selected_state', (req, res) => {
                                 // Populate Chart
                                 
 
-                                res.status(200).type('html').send(template); // <-- you may need to change this
+                                //Read in navigation bar
+                                fs.readFile(path.join(template_dir, 'navigationBar.html'), 'utf-8', (err, navigationBar) => {
+                                    template = template.replace("Navigation Bar", navigationBar);
+
+                                    res.status(200).type('html').send(template); // <-- you may need to change this
+                                });
                             }
                         })
                     }
