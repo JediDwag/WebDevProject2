@@ -99,14 +99,146 @@ app.get('/year/:selected_year', (req, res) => {
     }
 });
 
+app.get('/state', (req, res) => {
+    res.redirect('/state/AL');
+});
+
 // GET request handler for '/state/*'
 app.get('/state/:selected_state', (req, res) => {
-    console.log(req.params.selected_state);
-    fs.readFile(path.join(template_dir, 'state.html'), (err, template) => {
-        // modify `template` and send response
-        // this will require a query to the SQL database
+    console.log("Request for state: " + req.params.selected_state);
+    let stateAbb = req.params.selected_state.toUpperCase();
+    let query = "SELECT * FROM States;";
+    db.all(query, [], (err, rows) => {
+        if(err){
+            res.status(500).send('Database access error');
+            console.log("Error ", err.message);   
+        }
+        else{
+            let found = false;
+            let rowIndex = -1;
+            for(let i in rows){
+                if(rows[i].state_abbreviation == stateAbb){
+                    found = true;
+                    rowIndex = parseInt(i);
+                    break;
+                }
+            }
+            if(!found){
+                for(let i in rows){
+                    if(rows[i].state_name.toUpperCase() == stateAbb){
+                        found = true;
+                        rowIndex = parseInt(i);
+                        break;
+                    }
+                }
+                if(found){
+                    console.log("Redirect to: " + rows[rowIndex].state_abbreviation);
+                    res.redirect('/state/' + rows[rowIndex].state_abbreviation);
+                }
+                else{
+                    res.status(404).send('State not found');
+                }
+            }
+            else if(found){
+                fs.readFile(path.join(template_dir, 'state.html'), 'utf-8', (err, template) => {
+                    if(err){
+                        res.status(500).send('Server read error');
+                    }
+                    else{
+                        let stateNm = rows[rowIndex].state_name;
+                        stateAbb = rows[rowIndex].state_abbreviation;
+                        template = template.replace("!!TITLE!!", stateNm);
+                        template = template.replace("!!NAME!!", stateNm);
+                        let prevState = "";
+                        let nextState = "";
+                        if(rowIndex == 0){
+                            prevState = "WY";                            
+                        }
+                        else{
+                            prevState = rows[rowIndex - 1].state_abbreviation;
+                        }
+                        if(rowIndex == rows.length-1){
+                            nextState = "AK";
+                        }
+                        else{
+                            nextState = rows[rowIndex+1].state_abbreviation;
+                        }
+                        template = template.replace("!!PREV!!", prevState);
+                        template = template.replace("!!NEXT!!", nextState);
+                        template = template.replace("!!IMAGE!!", stateNm.toLowerCase());
 
-        res.status(200).type('html').send(template); // <-- you may need to change this
+
+                        query = "SELECT * FROM Consumption WHERE state_abbreviation = ?";
+                        db.all(query, [stateAbb], (err, rows) => {
+                            if(err){
+                                res.status(500).send('Database access error');
+                                console.log("Error ", err.message);   
+                            }
+                            else{
+                                //Make table headers
+                                let table = "<table><tr><th>Year</th><th>Coal Consumption</th><th>Gas Consumption</th><th>Nuclear Consumption</th><th>Petroleum Consumption</th><th>Renewable Consumption</th><th>Total Energy Consumption</th></tr>";
+                                let coal_count = 0;
+                                let natural_gas_count = 0;
+                                let nuclear_count = 0;
+                                let petroleum_count = 0;
+                                let renewable_count = 0;
+                                let years = new Array();
+                                let coal = new Array();
+                                let gas = new Array();
+                                let nuclear = new Array();
+                                let petro = new Array();
+                                let renewable = new Array();
+                                var i = 0;
+                                for (i = 0; i < rows.length; i++) {
+                                    //Insert table rows
+                                    table = table + "<tr>";
+                                    table = table + "<td>" + rows[i].year + "</td>";
+                                    table = table + "<td>" + rows[i].coal + "</td>";
+                                    table = table + "<td>" + rows[i].natural_gas + "</td>";
+                                    table = table + "<td>" + rows[i].nuclear + "</td>";
+                                    table = table + "<td>" + rows[i].petroleum + "</td>";
+                                    table = table + "<td>" + rows[i].renewable + "</td>";
+                                    let total = rows[i].coal + rows[i].natural_gas + rows[i].nuclear + rows[i].petroleum + rows[i].renewable;
+                                    table = table + "<td>" + total + "</td>";
+                                    table = table + "</tr>"
+
+                                    //Count up summary statistics
+                                    coal_count = coal_count + rows[i].coal;
+                                    natural_gas_count = natural_gas_count + rows[i].natural_gas;
+                                    nuclear_count = nuclear_count + rows[i].nuclear;
+                                    petroleum_count = petroleum_count + rows[i].petroleum;
+                                    renewable_count = renewable_count + rows[i].renewable;
+
+                                    years.push(rows[i].year);
+                                    coal.push((rows[i].coal/total*100).toPrecision(3));
+                                    gas.push(rows[i].natural_gas/total*100);
+                                    nuclear.push(rows[i].nuclear/total*100);
+                                    petro.push(rows[i].petroleum/total*100);
+                                    renewable.push(rows[i].renewable/total*100);
+
+                                }
+                                table = table + "</table>";
+                                //Insert table into template
+                                template = template.replace("!!TABLE!!", table);
+
+                                //Insert summary statistics into template
+                                template = template.replace("!!YEAR!!", years);
+                                template = template.replace("!!COAL!!", coal);
+                                template = template.replace("!!GAS!!", gas);
+                                template = template.replace("!!NUCLEAR!!", nuclear);
+                                template = template.replace("!!PETRO!!", petro);
+                                template = template.replace("!!RENEWABLE!!", renewable);
+
+                                // Populate Chart
+                                
+
+                                res.status(200).type('html').send(template); // <-- you may need to change this
+                            }
+                        })
+                    }
+                });
+            }
+        }
     });
 });
 
