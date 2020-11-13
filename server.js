@@ -25,7 +25,6 @@ let db = new sqlite3.Database(db_filename, sqlite3.OPEN_READONLY, (err) => {
 
 app.use(express.static(public_dir)); // serve static files from 'public' directory
 
-
 // GET request handler for home page '/' (redirect to /year/2018)
 app.get('/', (req, res) => {
     res.redirect('/year/2018');
@@ -92,7 +91,13 @@ app.get('/year/:selected_year', (req, res) => {
                     template = template.replace("petroleum_count", "petroleum_count = " + petroleum_count);
                     template = template.replace("renewable_count", "renewable_count = " + renewable_count);
                     
-                    res.status(200).type('html').send(template); // <-- you may need to change this
+                    //Read in navigation bar
+                    fs.readFile(path.join(template_dir, 'navigationBar.html'), 'utf-8', (err, navigationBar) => {
+                        template = template.replace("Navigation Bar", navigationBar);
+
+
+                        res.status(200).type('html').send(template); // <-- you may need to change this
+                    });
                 }
             });
         });
@@ -245,11 +250,17 @@ app.get('/state/:selected_state', (req, res) => {
 // GET request handler for '/energy/*'
 app.get('/energy/:selected_energy_source', (req, res) => {
     console.log(req.params.selected_energy_source);
-    fs.readFile(path.join(template_dir, 'energy.html'), (err, template) => {
+    fs.readFile(path.join(template_dir, 'energy.html'), 'utf-8',(err, template) => {
         // modify `template` and send response
         // this will require a query to the SQL database
+        
+        //Read in navigation bar
+        fs.readFile(path.join(template_dir, 'navigationBar.html'), 'utf-8', (err, navigationBar) => {
+            template = template.replace("Navigation Bar", navigationBar);
 
-        res.status(200).type('html').send(template); // <-- you may need to change this
+
+            res.status(200).type('html').send(template); // <-- you may need to change this
+        });
     });
 });
 
@@ -259,8 +270,14 @@ app.get('/test', (req, res) => {
     fs.readFile(path.join(public_dir, 'test.html'), 'utf8', (err, data) => {
         // modify `template` and send response
         // this will require a query to the SQL database
+        
+        //Read in navigation bar
+        fs.readFile(path.join(template_dir, 'navigationBar.html'), 'utf-8', (err, navigationBar) => {
+            data = data.replace("Navigation Bar", navigationBar);
 
-        res.status(200).type('html').send(data); // <-- you may need to change this
+
+            res.status(200).type('html').send(data); // <-- you may need to change this
+        });
     });
 });
 

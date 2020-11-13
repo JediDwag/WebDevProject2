@@ -20,7 +20,7 @@ h1{
 #previousBtn:hover, #nextBtn:hover{
     background-color: #8e8268;
 }
-/*Base off of https://www.w3schools.com/howto/howto_css_arrows.asp */
+/*Arrow based off of https://www.w3schools.com/howto/howto_css_arrows.asp */
 .arrow{
     border: solid white;
     border-width: 0 3px 3px 0;
@@ -55,7 +55,7 @@ h1{
     display: none;
     position: absolute;
     background-color: #f1f1f1;
-    min-width: 160px;
+    width: 99%;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
 }
@@ -69,8 +69,8 @@ h1{
     display: none;
     position: absolute;
     background-color: #f1f1f1;
-    min-width: 160px;
-    right: 160px;
+    min-width: 140px;
+    right: 65px;
     top: 0px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
@@ -81,6 +81,7 @@ h1{
     font-size: 16px;
     border: none;
     outline: none;
+    width: 100%;
 }
 .dropdownInner:hover .dropdown-left {
     display: block;
