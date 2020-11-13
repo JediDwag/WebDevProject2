@@ -105,7 +105,7 @@ app.get('/year/:selected_year', (req, res) => {
 });
 
 app.get('/state', (req, res) => {
-    res.redirect('/state/AL');
+    res.redirect('/state/MN');
 });
 
 // GET request handler for '/state/*'
