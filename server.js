@@ -222,6 +222,7 @@ app.get('/state/:selected_state', (req, res) => {
                                     renewable.push(rows[i].renewable/total*100);
 
                                 }
+                                template = template.replace("!!GRAPHTITLE!!", stateNm);
                                 table = table + "</table>";
                                 //Insert table into template
                                 template = template.replace("!!TABLE!!", table);
