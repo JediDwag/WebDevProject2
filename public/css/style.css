@@ -75,14 +75,18 @@ h1{
     display: block;
 }
 .dropdown-left{
+    float: left;
     display: none;
     position: absolute;
     background-color: #f1f1f1;
     max-width: 120px;
-    right: 65px;
+    right: 80px;
     top: 0px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
+}
+#dropdownState{
+    right: 90px;
 }
 .dropbtnInner {
     background-color: #f1f1f1;
@@ -123,4 +127,14 @@ h1{
         padding: 12px 5px;
         font-size: 0.8rem;
     }
+    .dropdown-left{
+        right: 35px;
+    }
+    #dropdownState{
+        right: 40px;
+    }
+    .dropbtnInner{
+        padding: 10px 0px;
+    }
+
 }

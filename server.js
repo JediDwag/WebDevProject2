@@ -239,7 +239,6 @@ app.get('/state/:selected_state', (req, res) => {
                                 template = template.replace("!!PETRO!!", petro);
                                 template = template.replace("!!RENEWABLE!!", renewable);
 
-<<<<<<< HEAD
                                 fs.readFile(path.join(template_dir, 'navigationBar.html'), 'utf-8', (err, navigationBar) => {
                                     if(err){
                                         res.status(500).send('Server read error');
@@ -248,17 +247,6 @@ app.get('/state/:selected_state', (req, res) => {
                                         res.status(200).type('html').send(template); // <-- you may need to change this
                                     }
                                 });  
-=======
-                                // Populate Chart
-                                
-
-                                //Read in navigation bar
-                                fs.readFile(path.join(template_dir, 'navigationBar.html'), 'utf-8', (err, navigationBar) => {
-                                    template = template.replace("Navigation Bar", navigationBar);
-
-                                    res.status(200).type('html').send(template); // <-- you may need to change this
-                                });
->>>>>>> 71177d06ebcd3b300fffd45ec1ede049b19a85a0
                             }
                         })
                     }
