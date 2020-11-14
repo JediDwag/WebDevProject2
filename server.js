@@ -262,14 +262,75 @@ app.get('/energy/:selected_energy_source', (req, res) => {
     fs.readFile(path.join(template_dir, 'energy.html'), 'utf-8',(err, template) => {
         // modify `template` and send response
         // this will require a query to the SQL database
-        
-        //Read in navigation bar
-        fs.readFile(path.join(template_dir, 'navigationBar.html'), 'utf-8', (err, navigationBar) => {
-            template = template.replace("Navigation Bar", navigationBar);
+        var params = req.params.selected_energy_source;
+    
+        if (params != "coal" && params != "natural_gas" && params != "nuclear" && params != "petroleum" && params != "renewable"){
+            res.status(404).send("Error, no data for "+ req.params.selected_energy_source);
+        }
+        else{
+            fs.readFile(path.join(template_dir, 'energy.html'), 'utf-8', (err, template) => {
+                // modify `template` and send response
+                // this will require a query to the SQL database
+                
+                //Put in selected energy
+                template = template.replace("ENERGY_HEADER", req.params.selected_energy_source);   
+                template = template.replace("energy_type", "energy_type = " + req.params.selected_energy_source);
 
+                //generate main query form state query
+                let query = "SELECT * FROM States;";
+                db.all(query, [], (err, rows) => {
+                    if (err) {
+                        console.log("Error", err.message);
+                    }
+                    else{
+                        let table = "<table><tr><th>Year</th>";
+                        var i = 0;
+                        for (i = 0; i < rows.length; i++) {
+                            table = table + "<th>" + rows[i].state_abbreviation + "</th>";
+                        }
+                        table = table + "</tr>";
+ 
+                            fs.readFile(path.join(template_dir, 'navigationBar.html'), 'utf-8', (err, navigationBar) => {
+                            if(err){
+                                res.status(500).send('Server read error');
+                            }else{
+                                template = template.replace("Navigation Bar", navigationBar);
+                                let year_i = 1960;
+                                for(year_i = 1960; year_i < 2019; year_i++){
+                                    console.log(year_i)
+                                    let query = 'SELECT ' + params +  ' FROM Consumption WHERE year = ' + year_i;
+                                    db.all(query, [], (err, rows2) => {
+                                        if(err) {
+                                            console.log("Error", err.message);
+                                        }
+                                        else {
+                                            table = table + "<tr>";
+                                            var j = 0;
+                                            for(j = 0; j < rows2.length; j++){
+                                                table = table + "<td>" + rows2[j] + "</td>";
+                                            }
+                                            table = table + "</tr>";
+                                            console.log(year_i+".2");
+                                            if(year_i >= 2018){
+                                                console.log("hi");
+                                                table = table + "</table>";
+                                                template = template.replace("TABLE", table);
+                                                res.status(200).type('html').send(template); // <-- you may need to change this
+                                            }
+                                        }
+                                    });
+                                }
+                                
 
-            res.status(200).type('html').send(template); // <-- you may need to change this
-        });
+                            }
+                        });
+
+                    }    
+                });
+  
+            });
+        }
+
     });
 });
 
