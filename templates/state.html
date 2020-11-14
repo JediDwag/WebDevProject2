@@ -16,20 +16,26 @@
         var renewable_counts;
     </script>
 </head>
-<body >
+<body>
     <!-- create template here -->
-    <h1 style="float:left">!!TITLE!!</h1>
+    <div class="navbar">
 
-    <!-- Previous and Next Buttons -->
-    <a id="previousBtn" style="margin-left:10px;" href="/state/!!PREV!!"><div class="arrow" style="transform: rotate(135deg);-webkit-transform: rotate(135deg);"></div> Previous</a>
-    <a id="nextBtn" href="/state/!!NEXT!!">Next <div class="arrow"></div></a>    
+        <!-- Previous and Next Buttons -->
+        <a id="navBtn" style="margin-left:15px;" href="/state/!!PREV!!">❮ Previous</a>
+        <a id="navBtn" href="/state/!!NEXT!!">Next ❯</a>
 
-    <!-- Navigation Menu -->
-    Navigation Bar
+        <h1 style="float:left; margin-left: 15px">!!TITLE!!</h1>
 
-    <img src="/images/states/!!IMAGE!!.png" alt="!!NAME!!" style="display: block; margin-left: auto; margin-right: auto; width: 25%; clear: both;float: left">
+        <!-- Navigation Menu -->
+        Navigation Bar
 
-    <div style="width:75%; float: right;">
+    </div>
+
+    
+
+    <img src="/images/states/!!IMAGE!!.png" alt="!!NAME!!" style="display: block; margin-left: 10px; margin-right: auto; width: 25%; clear: both;float: left">
+
+    <div style="width:70%; float: right; margin-right: 25px;">
         <div class="chartjs-style-monitor">
             <div class="chartjs-size-monitor-expand">
                 <div class></div>
@@ -40,6 +46,7 @@
         </div>
         <canvas id="area-graph" style="display: block; width: 800; height: 450;" width="800" height="450" class="chartjs-render-monitor"></canvas>
     </div>
+ 
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
     <script type="application/javascript">
@@ -112,7 +119,7 @@
         });
     </script>
 
-<img src="/images/states/usa.png" alt="The United States of America" style="display: block; margin-left: auto; margin-right: auto; width: 25%; float: left">    
+<img src="/images/states/usa.png" alt="The United States of America" style="display: block; margin-left: 10px; margin-right: auto; width: 25%; float: left">    
 
     <p>!!TABLE!!</p>
 

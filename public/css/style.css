@@ -1,48 +1,57 @@
 * {
     margin: 0 auto;
 }
+body{
+    background-color: lightgray;
+    margin-top: 80px;
+    min-width: 630;
+    width: auto;
+}
 table, th, td {
     border: 1px solid black;
     border-collapse: collapse;
 }
 h1{
+    font-family: Arial;
     background-color:  #8e8268;
     color: white;
     padding: 12px;
 }
-#previousBtn, #nextBtn{
+#navBtn, #previousBtn, #nextBtn{
+    font-size: 1.34rem;
     background-color: brown;
     color: white;
     text-decoration: none;
     padding: 16px;
     float: left;
 }
-#previousBtn:hover, #nextBtn:hover{
+#navBtn:hover, #previousBtn:hover, #nextBtn:hover{
     background-color: #8e8268;
-}
-/*Arrow based off of https://www.w3schools.com/howto/howto_css_arrows.asp */
-.arrow{
-    border: solid white;
-    border-width: 0 3px 3px 0;
-    display: inline-block;
-    padding: 3px;
-    transform: rotate(-45deg);
-    -webkit-transform: rotate(-45deg);
 }
 /* Dropdown navigation menu largely based off of https://www.w3schools.com/css/css_dropdowns.asp */
 .dropbtn {
     background-color: #8e8268;
     color: white;
     padding: 16px;
-    font-size: 16px;
+    font-size: 1.58rem;
     border: none;
     outline: none;
 }
+.navbar{
+    background-color: brown;
+    position: fixed; /* Set the navbar to fixed position */
+    top: 0; /* Position the navbar at the top of the page */
+    width: 100%; /* Full width */
+}
+.navbar a:hover {
+    background: #8e828e;
+    color: white;
+  }
 .searchBtn{
     background-color: brown;
     color: white;
     padding: 16px;
-    font-size: 16px;
+    font-size: 1.34rem;
     border: none;
     float:right;
     outline: none;
@@ -55,7 +64,7 @@ h1{
     display: none;
     position: absolute;
     background-color: #f1f1f1;
-    width: 99%;
+    width: 100%;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
 }
@@ -69,7 +78,7 @@ h1{
     display: none;
     position: absolute;
     background-color: #f1f1f1;
-    min-width: 140px;
+    max-width: 120px;
     right: 65px;
     top: 0px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
@@ -97,4 +106,21 @@ h1{
 }
 .dropdown:hover .dropbtn {
     background-color: #844D36;
+}
+@media screen and (max-height: 450px){
+
+}
+  
+@media screen and (max-width: 930px){
+    h1{
+        font-size: 0.8rem;
+    }
+    #navBtn, #previousBtn, #nextBtn{
+        padding: 10px 5px;
+        font-size: 0.8rem;
+    }
+    .dropbtn, .searchBtn{
+        padding: 12px 5px;
+        font-size: 0.8rem;
+    }
 }

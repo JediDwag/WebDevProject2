@@ -214,20 +214,23 @@ app.get('/state/:selected_state', (req, res) => {
                                     petroleum_count = petroleum_count + rows[i].petroleum;
                                     renewable_count = renewable_count + rows[i].renewable;
 
+                                    // Push values into arrays
                                     years.push(rows[i].year);
-                                    coal.push((rows[i].coal/total*100).toPrecision(3));
-                                    gas.push(rows[i].natural_gas/total*100);
-                                    nuclear.push(rows[i].nuclear/total*100);
-                                    petro.push(rows[i].petroleum/total*100);
-                                    renewable.push(rows[i].renewable/total*100);
+                                    coal.push((rows[i].coal/total*100).toPrecision(5));
+                                    gas.push((rows[i].natural_gas/total*100).toPrecision(5));
+                                    nuclear.push((rows[i].nuclear/total*100).toPrecision(5));
+                                    petro.push((rows[i].petroleum/total*100).toPrecision(5));
+                                    renewable.push((rows[i].renewable/total*100).toPrecision(5));
 
                                 }
+
                                 template = template.replace("!!GRAPHTITLE!!", stateNm);
                                 table = table + "</table>";
+
                                 //Insert table into template
                                 template = template.replace("!!TABLE!!", table);
 
-                                //Insert summary statistics into template
+                                // Populate Chart
                                 template = template.replace("!!YEAR!!", years);
                                 template = template.replace("!!COAL!!", coal);
                                 template = template.replace("!!GAS!!", gas);
@@ -235,10 +238,14 @@ app.get('/state/:selected_state', (req, res) => {
                                 template = template.replace("!!PETRO!!", petro);
                                 template = template.replace("!!RENEWABLE!!", renewable);
 
-                                // Populate Chart
-                                
-
-                                res.status(200).type('html').send(template); // <-- you may need to change this
+                                fs.readFile(path.join(template_dir, 'navigationBar.html'), 'utf-8', (err, navigationBar) => {
+                                    if(err){
+                                        res.status(500).send('Server read error');
+                                    }else{
+                                        template = template.replace("Navigation Bar", navigationBar);
+                                        res.status(200).type('html').send(template); // <-- you may need to change this
+                                    }
+                                });  
                             }
                         })
                     }
