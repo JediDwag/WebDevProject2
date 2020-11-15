@@ -275,7 +275,8 @@ app.get('/energy/:selected_energy_source', (req, res) => {
                 //Put in selected energy
                 template = template.replace("ENERGY_HEADER", req.params.selected_energy_source);   
                 template = template.replace("energy_type", "energy_type = " + req.params.selected_energy_source);
-
+                
+                
                 //generate main query form state query
                 let query = "SELECT * FROM States;";
                 db.all(query, [], (err, rows) => {
@@ -285,54 +286,65 @@ app.get('/energy/:selected_energy_source', (req, res) => {
                     else{
                         let table = "<table><tr><th>Year</th>";
                         var i = 0;
+                        //Insert table headers for states
                         for (i = 0; i < rows.length; i++) {
                             table = table + "<th>" + rows[i].state_abbreviation + "</th>";
                         }
+
+                        //Fill in table rows
                         table = table + "</tr>";
- 
-                            fs.readFile(path.join(template_dir, 'navigationBar.html'), 'utf-8', (err, navigationBar) => {
-                            if(err){
-                                res.status(500).send('Server read error');
-                            }else{
-                                template = template.replace("Navigation Bar", navigationBar);
-                                let year_i = 1960;
-                                for(year_i = 1960; year_i < 2019; year_i++){
-                                    console.log(year_i)
-                                    let query = 'SELECT ' + params +  ' FROM Consumption WHERE year = ' + year_i;
-                                    db.all(query, [], (err, rows2) => {
-                                        if(err) {
-                                            console.log("Error", err.message);
-                                        }
-                                        else {
-                                            table = table + "<tr>";
-                                            var j = 0;
-                                            for(j = 0; j < rows2.length; j++){
-                                                table = table + "<td>" + rows2[j] + "</td>";
-                                            }
-                                            table = table + "</tr>";
-                                            console.log(year_i+".2");
-                                            if(year_i >= 2018){
-                                                console.log("hi");
-                                                table = table + "</table>";
-                                                template = template.replace("TABLE", table);
-                                                res.status(200).type('html').send(template); // <-- you may need to change this
-                                            }
-                                        }
-                                    });
-                                }
-                                
-
+                        promiseArray = [];
+                        for(var year_i = 1960; year_i < 2019; year_i++){
+                            promiseArray.push(fillInRow(year_i, params));
+                        }
+                        Promise.all(promiseArray).then(results => {
+                            for (var i=0; i < results.length; i++) {
+                                table = table + results[i];
                             }
-                        });
+                            table = table + "</table>";
+                            //Insert table
+                            template = template.replace("TABLE", table);
 
+                            //Read in navigation bar
+                            fs.readFile(path.join(template_dir, 'navigationBar.html'), 'utf-8', (err, navigationBar) => {
+                                if(err){
+                                    res.status(500).send('Server read error');
+                                }else{
+                                    template = template.replace("Navigation Bar", navigationBar);
+
+                                    //Send template
+                                    res.status(200).type('html').send(template); // <-- you may need to change this
+                                }
+                            });
+                        });
                     }    
                 });
-  
             });
         }
-
     });
 });
+
+function fillInRow(year_i, params) {
+    return new Promise((resolve, reject) => {
+        //Insert table rows
+        var row = "<tr>";
+        row = row + "<td>" + year_i + "</td>";
+
+        let query = 'SELECT ' + params +  ' FROM Consumption WHERE year = ' + year_i;
+        db.all(query, [], (err, rows2) => {
+            if(err) {
+                reject("Database error");
+            }
+            else {
+                for(var j = 0; j < rows2.length; j++){
+                    row = row + "<td>" + rows2[j][params] + "</td>";
+                }
+                row = row + "</tr>";
+                resolve(row);
+            }
+        });
+    });
+}
 
 // This is only a test page. This entire method will be removed eventually.
 app.get('/test', (req, res) => {

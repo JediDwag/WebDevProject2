@@ -11,6 +11,9 @@ table, th, td {
     border: 1px solid black;
     border-collapse: collapse;
 }
+td {
+    padding-right: 12px;
+}
 h1{
     font-family: Arial;
     background-color:  #8e8268;
