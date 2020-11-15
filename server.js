@@ -301,6 +301,10 @@ app.get('/energy/:selected_energy_source', (req, res) => {
                 template = template.replace("!!PREV!!", prev);
                 template = template.replace("!!NEXT!!", next);
                 
+                //Put in image for selected energy
+                template = template.replace("!!IMAGE!!", params);
+                template = template.replace("!!NAME!!", "Image for energy source: " + params);
+
                 //generate main query form state query
                 let query = "SELECT * FROM States;";
                 db.all(query, [], (err, rows) => {
