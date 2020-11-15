@@ -258,7 +258,6 @@ app.get('/state/:selected_state', (req, res) => {
 
 // GET request handler for '/energy/*'
 app.get('/energy/:selected_energy_source', (req, res) => {
-    console.log(req.params.selected_energy_source);
     fs.readFile(path.join(template_dir, 'energy.html'), 'utf-8',(err, template) => {
         // modify `template` and send response
         // this will require a query to the SQL database
@@ -273,9 +272,34 @@ app.get('/energy/:selected_energy_source', (req, res) => {
                 // this will require a query to the SQL database
                 
                 //Put in selected energy
-                template = template.replace("ENERGY_HEADER", req.params.selected_energy_source);   
+                template = template.replace("ENERGY_HEADER", req.params.selected_energy_source.replace('_', ' '));   
                 template = template.replace("energy_type", "energy_type = " + req.params.selected_energy_source);
                 
+                //Put in previous/next buttons
+                var prev;
+                var next;
+                if (params === "coal"){
+                    prev = "renewable";
+                    next = "natural_gas";
+                }
+                else if (params === "natural_gas"){
+                    prev = "coal";
+                    next = "nuclear";
+                }
+                else if (params === "nuclear"){
+                    prev = "natural_gas";
+                    next = "petroleum";
+                }
+                else if (params === "petroleum"){
+                    prev = "nuclear";
+                    next = "renewable";
+                }
+                else {
+                    prev = "petroleum";
+                    next = "coal";
+                }
+                template = template.replace("!!PREV!!", prev);
+                template = template.replace("!!NEXT!!", next);
                 
                 //generate main query form state query
                 let query = "SELECT * FROM States;";
@@ -290,6 +314,7 @@ app.get('/energy/:selected_energy_source', (req, res) => {
                         for (i = 0; i < rows.length; i++) {
                             table = table + "<th>" + rows[i].state_abbreviation + "</th>";
                         }
+                        table = table + "<th>" + "USA Total" + "</th>";
 
                         //Fill in table rows
                         table = table + "</tr>";
@@ -327,7 +352,8 @@ app.get('/energy/:selected_energy_source', (req, res) => {
 function fillInRow(year_i, params) {
     return new Promise((resolve, reject) => {
         //Insert table rows
-        var row = "<tr>";
+        var row = "<tr>";        
+        var total = 0;
         row = row + "<td>" + year_i + "</td>";
 
         let query = 'SELECT ' + params +  ' FROM Consumption WHERE year = ' + year_i;
@@ -338,7 +364,9 @@ function fillInRow(year_i, params) {
             else {
                 for(var j = 0; j < rows2.length; j++){
                     row = row + "<td>" + rows2[j][params] + "</td>";
+                    total = total + rows2[j][params];
                 }
+                row = row + "<td>" + total + "</td>";
                 row = row + "</tr>";
                 resolve(row);
             }
