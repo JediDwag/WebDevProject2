@@ -312,7 +312,7 @@ app.get('/energy/:selected_energy_source', (req, res) => {
                         console.log("Error", err.message);
                     }
                     else{
-                        let table = "<table><tr><th>Year</th>";
+                        let table = "<table class=\"content-table\" id=\"tableFloat\"><thead><th>Year</th>";
                         var i = 0;
                         //Insert table headers for states
                         for (i = 0; i < rows.length; i++) {
@@ -321,7 +321,7 @@ app.get('/energy/:selected_energy_source', (req, res) => {
                         table = table + "<th>" + "USA Total" + "</th>";
 
                         //Fill in table rows
-                        table = table + "</tr>";
+                        table = table + "</thead>";
                         promiseArray = [];
                         for(var year_i = 1960; year_i < 2019; year_i++){
                             promiseArray.push(fillInRow(year_i, params));
