@@ -56,7 +56,7 @@ h1{
     overflow: hidden;
     box-shadow: 0 0 20px rgba(0,0,0,0.2);
 }
-.content-table thead tr{
+.content-table thead{
     background-color: #8e8268;
     color: white;
     text-align: left;

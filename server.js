@@ -55,7 +55,7 @@ app.get('/year/:selected_year', (req, res) => {
                 }
                 else{
                     //Make table headers
-                    let table = "<table><tr><th>State</th><th>Coal Consumption</th><th>Gas Consumption</th><th>Nuclear Consumption</th><th>Petroleum Consumption</th><th>Renewable Consumption</th><th>Total Energy Consumption</th></tr>";
+                    let table = "<table class=\"content-table\" style=\"margin-left: auto; margin-right: auto\"><thead><th>State</th><th>Coal Consumption</th><th>Gas Consumption</th><th>Nuclear Consumption</th><th>Petroleum Consumption</th><th>Renewable Consumption</th><th>Total Energy Consumption</th></thead>";
                     let coal_count = 0;
                     let natural_gas_count = 0;
                     let nuclear_count = 0;
@@ -411,23 +411,6 @@ function fillInRow(year_i, params) {
         });
     });
 }
-
-// This is only a test page. This entire method will be removed eventually.
-app.get('/test', (req, res) => {
-    console.log(req.params.selected_state);
-    fs.readFile(path.join(public_dir, 'test.html'), 'utf8', (err, data) => {
-        // modify `template` and send response
-        // this will require a query to the SQL database
-        
-        //Read in navigation bar
-        fs.readFile(path.join(template_dir, 'navigationBar.html'), 'utf-8', (err, navigationBar) => {
-            data = data.replace("Navigation Bar", navigationBar);
-
-
-            res.status(200).type('html').send(data); // <-- you may need to change this
-        });
-    });
-});
 
 app.listen(port, () => {
     console.log('Now listening on port ' + port);
