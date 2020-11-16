@@ -314,9 +314,11 @@ app.get('/energy/:selected_energy_source', (req, res) => {
                     else{
                         let table = "<table><tr><th>Year</th>";
                         var i = 0;
+                        var state_abbrev = [];
                         //Insert table headers for states
                         for (i = 0; i < rows.length; i++) {
                             table = table + "<th>" + rows[i].state_abbreviation + "</th>";
+                            state_abbrev.push(rows[i].state_abbreviation);
                         }
                         table = table + "<th>" + "USA Total" + "</th>";
 
@@ -333,18 +335,32 @@ app.get('/energy/:selected_energy_source', (req, res) => {
                             table = table + "</table>";
                             //Insert table
                             template = template.replace("TABLE", table);
-
-                            //Read in navigation bar
-                            fs.readFile(path.join(template_dir, 'navigationBar.html'), 'utf-8', (err, navigationBar) => {
-                                if(err){
-                                    res.status(500).send('Server read error');
-                                }else{
-                                    template = template.replace("Navigation Bar", navigationBar);
-
-                                    //Send template
-                                    res.status(200).type('html').send(template); // <-- you may need to change this
+                            
+                            dataArray = [];
+                            //Get data for script variable
+                            for (var k=0; k < state_abbrev.length; k++) {
+                                dataArray.push(fillInArray(state_abbrev[k], params));
+                            }
+                            Promise.all(dataArray).then(results => {
+                                var energy_count = {};
+                                for (var l=0; l < results.length; l++) {
+                                    energy_count[state_abbrev[l]] = results[l];
                                 }
-                            });
+                                console.log(energy_count);
+                                template = template.replace("!!energy_counts!!", energy_count);
+
+                                //Read in navigation bar
+                                fs.readFile(path.join(template_dir, 'navigationBar.html'), 'utf-8', (err, navigationBar) => {
+                                    if(err){
+                                        res.status(500).send('Server read error');
+                                    }else{
+                                        template = template.replace("Navigation Bar", navigationBar);
+
+                                        //Send template
+                                        res.status(200).type('html').send(template); // <-- you may need to change this
+                                    }
+                                });
+                            })
                         });
                     }    
                 });
@@ -352,6 +368,24 @@ app.get('/energy/:selected_energy_source', (req, res) => {
         }
     });
 });
+
+function fillInArray(state_abbrev, params) {
+    return new Promise((resolve, reject) => {
+        var array = [];
+        let query = 'SELECT ' + params +  ' FROM Consumption WHERE state_abbreviation = "' + state_abbrev + '"';
+        db.all(query, [], (err, rows2) => {
+            if(err) {
+                reject("Database error");
+            }
+            else {
+                for (var j = 0; j < rows2.length; j++){
+                    array.push(rows2[j][params]);
+                }
+                resolve(array);
+            }
+        });
+    });
+}
 
 function fillInRow(year_i, params) {
     return new Promise((resolve, reject) => {
