@@ -182,7 +182,7 @@ app.get('/state/:selected_state', (req, res) => {
                             }
                             else{
                                 //Make table headers
-                                let table = "<table><tr><th>Year</th><th>Coal Consumption</th><th>Gas Consumption</th><th>Nuclear Consumption</th><th>Petroleum Consumption</th><th>Renewable Consumption</th><th>Total Energy Consumption</th></tr>";
+                                let table = "<table class=\"content-table\" id=\"tableFloat\"><thead><th>Year</th><th>Coal Use</th><th>Gas Use</th><th>Nuclear Use</th><th>Petroleum Use</th><th>Renewable Use</th><th>Total Energy Use</th></thead>";
                                 let coal_count = 0;
                                 let natural_gas_count = 0;
                                 let nuclear_count = 0;
