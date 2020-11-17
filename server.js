@@ -55,7 +55,7 @@ app.get('/year/:selected_year', (req, res) => {
                 }
                 else{
                     //Make table headers
-                    let table = "<table><tr><th>State</th><th>Coal Consumption</th><th>Gas Consumption</th><th>Nuclear Consumption</th><th>Petroleum Consumption</th><th>Renewable Consumption</th><th>Total Energy Consumption</th></tr>";
+                    let table = "<table class=\"scrollable\" style=\"margin-left: auto; margin-right: auto\"><thead><th>State</th><th>Coal Consumption</th><th>Gas Consumption</th><th>Nuclear Consumption</th><th>Petroleum Consumption</th><th>Renewable Consumption</th><th>Total Energy Consumption</th></thead>";
                     let coal_count = 0;
                     let natural_gas_count = 0;
                     let nuclear_count = 0;
@@ -142,7 +142,7 @@ app.get('/state/:selected_state', (req, res) => {
                     res.redirect('/state/' + rows[rowIndex].state_abbreviation);
                 }
                 else{
-                    res.status(404).send('State not found');
+                    res.status(404).send("Error: no data for state " + req.params.selected_state);
                 }
             }
             else if(found){
@@ -182,7 +182,7 @@ app.get('/state/:selected_state', (req, res) => {
                             }
                             else{
                                 //Make table headers
-                                let table = "<table class=\"content-table\" id=\"tableFloat\"><thead><th>Year</th><th>Coal Use</th><th>Gas Use</th><th>Nuclear Use</th><th>Petroleum Use</th><th>Renewable Use</th><th>Total Energy Use</th></thead>";
+                                let table = "<table class=\"scrollable\" id=\"tableFloat\"><thead><th>Year</th><th>Coal Use</th><th>Gas Use</th><th>Nuclear Use</th><th>Petroleum Use</th><th>Renewable Use</th><th>Total Energy Use</th></thead>";
                                 let coal_count = 0;
                                 let natural_gas_count = 0;
                                 let nuclear_count = 0;
@@ -312,7 +312,7 @@ app.get('/energy/:selected_energy_source', (req, res) => {
                         console.log("Error", err.message);
                     }
                     else{
-                        let table = "<table><tr><th>Year</th>";
+                        let table = "<table class=\"scrollable\" id=\"tableFloat\"><thead><th>Year</th>";
                         var i = 0;
                         var state_abbrev = [];
                         //Insert table headers for states
@@ -323,7 +323,7 @@ app.get('/energy/:selected_energy_source', (req, res) => {
                         table = table + "<th>" + "USA Total" + "</th>";
 
                         //Fill in table rows
-                        table = table + "</tr>";
+                        table = table + "</thead>";
                         promiseArray = [];
                         for(var year_i = 1960; year_i < 2019; year_i++){
                             promiseArray.push(fillInRow(year_i, params));
@@ -411,23 +411,6 @@ function fillInRow(year_i, params) {
         });
     });
 }
-
-// This is only a test page. This entire method will be removed eventually.
-app.get('/test', (req, res) => {
-    console.log(req.params.selected_state);
-    fs.readFile(path.join(public_dir, 'test.html'), 'utf8', (err, data) => {
-        // modify `template` and send response
-        // this will require a query to the SQL database
-        
-        //Read in navigation bar
-        fs.readFile(path.join(template_dir, 'navigationBar.html'), 'utf-8', (err, navigationBar) => {
-            data = data.replace("Navigation Bar", navigationBar);
-
-
-            res.status(200).type('html').send(data); // <-- you may need to change this
-        });
-    });
-});
 
 app.listen(port, () => {
     console.log('Now listening on port ' + port);
