@@ -142,7 +142,7 @@ app.get('/state/:selected_state', (req, res) => {
                     res.redirect('/state/' + rows[rowIndex].state_abbreviation);
                 }
                 else{
-                    res.status(404).send('State not found');
+                    res.status(404).send("Error: no data for state " + req.params.selected_state);
                 }
             }
             else if(found){
