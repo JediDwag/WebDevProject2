@@ -47,6 +47,9 @@
         var dataset = [];
         for (var j=0; j < state_abrev.length; j++) {
             let randomColor = '#' + Math.floor(Math.random()*16777215).toString(16); //Source: https://css-tricks.com/snippets/javascript/random-hex-color/
+            while (randomColor === '#d3d3d3') {
+                randomColor = '#' + Math.floor(Math.random()*16777215).toString(16);
+            }
             let state = {
                 data: energy_counts[state_abrev[j]],
                 label: state_abrev[j],
@@ -70,7 +73,7 @@
                 text: 'Yearly Consumption By State'
                 }
             }
-            });
+        });
     </script>
 
     <!-- Generic Energy Image -->
