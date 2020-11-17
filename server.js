@@ -346,8 +346,8 @@ app.get('/energy/:selected_energy_source', (req, res) => {
                                 for (var l=0; l < results.length; l++) {
                                     energy_count[state_abbrev[l]] = results[l];
                                 }
-                                console.log(energy_count);
-                                template = template.replace("!!energy_counts!!", energy_count);
+                                template = template.replace("!!energy_counts!!", JSON.stringify(energy_count));
+                                template = template.replace("!!state_abrev!!", JSON.stringify(state_abbrev));
 
                                 //Read in navigation bar
                                 fs.readFile(path.join(template_dir, 'navigationBar.html'), 'utf-8', (err, navigationBar) => {
@@ -362,7 +362,7 @@ app.get('/energy/:selected_energy_source', (req, res) => {
                                 });
                             })
                         });
-                    }    
+                    }
                 });
             });
         }

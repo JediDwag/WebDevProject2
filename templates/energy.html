@@ -10,6 +10,7 @@
         //   * these variables will be defined and accessible from any script loaded after this one
         var energy_type;
         var energy_counts = !!energy_counts!!;  // e.g. {AK: [...], AL: [...], AR: [...], ...}
+        var state_abrev = !!state_abrev!!; // [AK, AL, AR, ...]
     </script>
 </head>
 <body>
@@ -28,16 +29,53 @@
 
     </div>
 
-    <!-- Line Chart -->
-    
-
-
     <!-- Selected Energy Image -->
-    <img src="/images/energy/!!IMAGE!!.png" alt="!!NAME!!" style="display: block; margin-left: 10px; margin-right: auto; width: 25%; max-height: 400px; max-width: 400px; clear: both;float: left">
+    <img src="/images/energy/!!IMAGE!!.png" alt="!!NAME!!" style="display: block; margin-left: 10px; margin-right: auto; width: 12%;float: left">
+
+
+    <!-- Line Chart -->
+    <div style="width:70%;float: left;">
+        <canvas id="line-chart" width="800" height="450"></canvas>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script>
+        //Format data for use in chart
+        var label = [];
+        for (var i=1960; i<2019; i++) {
+            label.push(i);
+        }
+        var dataset = [];
+        for (var j=0; j < state_abrev.length; j++) {
+            let randomColor = '#' + Math.floor(Math.random()*16777215).toString(16); //Source: https://css-tricks.com/snippets/javascript/random-hex-color/
+            let state = {
+                data: energy_counts[state_abrev[j]],
+                label: state_abrev[j],
+                borderColor: randomColor,
+                backgroundColor: randomColor,
+                fill: false
+            }
+            dataset.push(state);
+        }
+
+        //Create chart
+        new Chart(document.getElementById("line-chart"), {
+            type: 'line',
+            data: {
+                labels: label,
+                datasets: dataset
+            },
+            options: {
+                title: {
+                display: true,
+                text: 'Yearly Consumption By State'
+                }
+            }
+            });
+    </script>
 
     <!-- Generic Energy Image -->
-    <img src="/images/energy/energy.png" alt="Energy Image" style="display: block; margin-left: 10px; margin-right: auto; width: 25%; padding-top: 40px; max-height: 300px; max-width: 300px; float: left">
-    
+    <img src="/images/energy/energy.png" alt="Energy Image" style="display: block; margin-left: 10px; margin-right: auto; width: 12%; float: left">
+
     <!-- Table -->  
     TABLE
 </body>
