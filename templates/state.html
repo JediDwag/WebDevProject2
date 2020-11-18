@@ -8,12 +8,13 @@
     <script type="application/javascript">
         // `state` and arrays of consumption per year => set these variables equal to appropriate value
         //   * these variables will be defined and accessible from any script loaded after this one
-        var state;
-        var coal_counts;  // e.g. [1234, 2567, ...]
-        var natural_gas_counts;
-        var nuclear_counts;
-        var petroleum_counts;
-        var renewable_counts;
+        var state = "!!STATE!!";
+        var years = [!!YEAR!!];
+        var coal_counts = [!!COAL!!];  // e.g. [1234, 2567, ...]
+        var natural_gas_counts = [!!GAS!!];
+        var nuclear_counts = [!!NUCLEAR!!];
+        var petroleum_counts = [!!PETRO!!];
+        var renewable_counts = [!!RENEWABLE!!];
     </script>
 </head>
 <body>
@@ -30,8 +31,6 @@
         Navigation Bar
 
     </div>
-
-    
 
     <img src="/images/states/!!IMAGE!!.png" alt="!!NAME!!" style="display: block; margin-left: 10px; margin-right: auto; width: 25%; clear: both;float: left">
 
@@ -54,33 +53,33 @@
             type: 'line',
             data: {
 
-                labels: [!!YEAR!!],
+                labels: years,
 
                 datasets: [{
                     label: 'Coal',
                     borderColor: '#003f5c',
                     backgroundColor: '#003f5c',
-                    data: [!!COAL!!],
+                    data: coal_counts,
                 }, {
                     label: 'Natural Gas',
                     borderColor: '#58508d',
                     backgroundColor: '#58508d',
-                    data: [!!GAS!!],
+                    data: natural_gas_counts,
                 }, {
                     label: 'Nuclear',
                     borderColor: '#bc5090',
                     backgroundColor: '#bc5090',
-                    data: [!!NUCLEAR!!],
+                    data: nuclear_counts,
                 }, {
                     label: 'Petroleum',
                     borderColor: '#ff6361',
                     backgroundColor: '#ff6361',
-                    data: [!!PETRO!!],
+                    data: petroleum_counts,
                 }, {
                     label: 'Renewable',
                     borderColor: '#ffa600',
                     backgroundColor: '#ffa600',
-                    data: [!!RENEWABLE!!]
+                    data: renewable_counts
                 }]
 
             },
@@ -88,7 +87,7 @@
                 responsive: true,
                 title: {
                     display: true,
-                    text: 'Percentage of Energy Consumption by Type by Year - State of !!GRAPHTITLE!!'
+                    text: 'Percentage of Energy Consumption by Type by Year - State of ' + state
                 },
                 tooltips: {
                     mode: 'index'
