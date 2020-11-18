@@ -182,7 +182,7 @@ app.get('/state/:selected_state', (req, res) => {
                             }
                             else{
                                 //Make table headers
-                                let table = "<table class=\"scrollable\" id=\"tableFloat\"><thead><th>Year</th><th>Coal Use</th><th>Gas Use</th><th>Nuclear Use</th><th>Petroleum Use</th><th>Renewable Use</th><th>Total Energy Use</th></thead>";
+                                let table = "<table class=\"scrollable\" id=\"tableFloat\"><thead><th>Year</th><th>Coal Consumption</th><th>Gas Consumption</th><th>Nuclear Consumption</th><th>Petroleum Consumption</th><th>Renewable Consumption</th><th>Total Energy Consumption</th></thead>";
                                 let years = new Array();
                                 let coal = new Array();
                                 let gas = new Array();
