@@ -111,7 +111,6 @@ app.get('/state', (req, res) => {
 
 // GET request handler for '/state/*'
 app.get('/state/:selected_state', (req, res) => {
-    console.log("Request for state: " + req.params.selected_state);
     let stateAbb = req.params.selected_state.toUpperCase();
     let query = "SELECT * FROM States;";
     db.all(query, [], (err, rows) => {
@@ -153,6 +152,7 @@ app.get('/state/:selected_state', (req, res) => {
                     else{
                         let stateNm = rows[rowIndex].state_name;
                         stateAbb = rows[rowIndex].state_abbreviation;
+                        template = template.replace("!!STATE!!", stateNm);
                         template = template.replace("!!TITLE!!", stateNm);
                         template = template.replace("!!NAME!!", stateNm);
                         let prevState = "";
@@ -183,11 +183,6 @@ app.get('/state/:selected_state', (req, res) => {
                             else{
                                 //Make table headers
                                 let table = "<table class=\"scrollable\" id=\"tableFloat\"><thead><th>Year</th><th>Coal Use</th><th>Gas Use</th><th>Nuclear Use</th><th>Petroleum Use</th><th>Renewable Use</th><th>Total Energy Use</th></thead>";
-                                let coal_count = 0;
-                                let natural_gas_count = 0;
-                                let nuclear_count = 0;
-                                let petroleum_count = 0;
-                                let renewable_count = 0;
                                 let years = new Array();
                                 let coal = new Array();
                                 let gas = new Array();
@@ -208,13 +203,6 @@ app.get('/state/:selected_state', (req, res) => {
                                     table = table + "<td>" + total + "</td>";
                                     table = table + "</tr>"
 
-                                    //Count up summary statistics
-                                    coal_count = coal_count + rows[i].coal;
-                                    natural_gas_count = natural_gas_count + rows[i].natural_gas;
-                                    nuclear_count = nuclear_count + rows[i].nuclear;
-                                    petroleum_count = petroleum_count + rows[i].petroleum;
-                                    renewable_count = renewable_count + rows[i].renewable;
-
                                     // Push values into arrays
                                     years.push(rows[i].year);
                                     coal.push((rows[i].coal/total*100).toPrecision(5));
@@ -225,7 +213,6 @@ app.get('/state/:selected_state', (req, res) => {
 
                                 }
 
-                                template = template.replace("!!GRAPHTITLE!!", stateNm);
                                 table = table + "</table>";
 
                                 //Insert table into template
