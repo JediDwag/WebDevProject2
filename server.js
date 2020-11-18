@@ -174,7 +174,7 @@ app.get('/state/:selected_state', (req, res) => {
                         template = template.replace("!!IMAGE!!", stateNm.toLowerCase());
 
 
-                        query = "SELECT * FROM Consumption WHERE state_abbreviation = ?";
+                        query = "SELECT * FROM Consumption WHERE state_abbreviation = ? ORDER BY year";
                         db.all(query, [stateAbb], (err, rows) => {
                             if(err){
                                 res.status(500).send('Database access error');
