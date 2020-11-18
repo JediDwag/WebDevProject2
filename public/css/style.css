@@ -50,10 +50,9 @@ h1{
 .scrollable{
     font-family: Arial, Helvetica, sans-serif;
     border: collapse;
-    margin: 25px 0;
+    /* margin: 25px 0; */
     font-size: 0.9em;
     min-width: 400px;
-    /* border-radius: 5px 5px 0 0; */
     overflow: auto;
     box-shadow: 0 0 20px rgba(0,0,0,0.5);
 }
@@ -201,5 +200,8 @@ h1{
     }
     #tableFloat{
         margin: 10px;
+    }
+    .scrollable th{
+        padding: 10px;
     }
 }
